@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            flex-direction: column;
+            animation: backgroundAnimation 5s infinite alternate;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(45deg, #f6d365 0%, #fda085 100%);
+            }
+            100% {
+                background: linear-gradient(45deg, #fda085 0%, #f6d365 100%);
+            }
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 30px;
+            width: 350px;
+            font-family: 'Segoe UI', sans-serif;
+            animation: fadeIn 2s ease-out;
+            margin-bottom: 70px; /* Ensures footer doesn't overlap content */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #4CAF50;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 80%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .age-result {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+            background: #333;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 0;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-message {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .fun-fact {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #ff6347;
+            font-style: italic;
+            opacity: 0;
+            animation: showFact 5s ease-in-out forwards;
+            transition: opacity 1s ease;
+        }
+
+        @keyframes showFact {
+            0% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Age Calculator</h1>
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" placeholder="Your name" required>
+        
+        <label for="dob">Enter your date of birth:</label>
+        <div style="display: flex; justify-content: space-between;">
+            <input type="number" id="month" placeholder="Month (MM)" required min="1" max="12" style="width: 30%;">
+            <input type="number" id="day" placeholder="Day (DD)" required min="1" max="31" style="width: 30%;">
+            <input type="number" id="year" placeholder="Year (YYYY)" required style="width: 40%;">
+        </div>
+        
+        <button onclick="calculateAge()">Calculate Age</button>
+        <div class="message" id="message"></div>
+        <div class="age-result" id="result"></div>
+        <div class="fun-fact" id="funFact"></div>
+    </div>
+
+    <footer>
+        <p class="footer-message">Created by <strong>Bala</strong></p>
+        <a href="https://medium.com/@kbala7092" target="_blank">
+            <button style="background-color: #f2b04e;">Visit My Blog</button>
+        </a>
+    </footer>
+
+    <script>
+        function calculateAge() {
+            const nameInput = document.getElementById('name').value.trim();
+            const monthInput = document.getElementById('month').value.trim();
+            const dayInput = document.getElementById('day').value.trim();
+            const yearInput = document.getElementById('year').value.trim();
+
+            const currentYear = new Date().getFullYear();
+
+            if (!nameInput || !monthInput || !dayInput || !yearInput) {
+                document.getElementById('result').textContent = "";
+                document.getElementById('message').textContent = "Please fill in all fields.";
+                return;
+            }
+
+            if (monthInput < 1 || monthInput > 12) {
+                document.getElementById('result').textContent = "";
+                document.getElementById('message').textContent = "Please enter a valid month (1-12).";
+                return;
+            }
+
+            if (dayInput < 1 || dayInput > 31) {
+                document.getElementById('result').textContent = "";
+                document.getElementById('message').textContent = "Please enter a valid day (1-31).";
+                return;
+            }
+
+            if (yearInput < 1900 || yearInput > currentYear) {
+                document.getElementById('result').textContent = "";
+                document.getElementById('message').textContent = "Please enter a valid year (1900 - current year).";
+                return;
+            }
+
+            const dob = new Date(yearInput, monthInput - 1, dayInput);
+            const today = new Date();
+
+            // Check if the date is not in the future
+            if (dob > today) {
+                document.getElementById('result').textContent = "";
+                document.getElementById('message').textContent = "Date of birth can't be in the future!";
+                return;
+            }
+
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            const d = today.getDate() - dob.getDate();
+
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            let monthAge = m < 0 ? 12 + m : m;
+            let dayAge = d < 0 ? 30 + d : d;
+
+            let ageMessage = '';
+            let funFact = '';
+
+            if (age < 13) {
+                ageMessage = `${nameInput}, you're just getting started! 🎉 Enjoy your childhood!`;
+                funFact = `Did you know? At your age, your brain is developing rapidly! 🧠`;
+            } else if (age >= 13 && age <= 19) {
+                ageMessage = `${nameInput}, your teenage years are full of adventures! 🌟`;
+                funFact = `Did you know? Teens often experience growth spurts and major life changes! 🚀`;
+            } else if (age >= 20 && age <= 29) {
+                ageMessage = `${nameInput}, welcome to the roaring twenties! ✨ Keep chasing your dreams!`;
+                funFact = `Did you know? In your 20s, you're more likely to try new things and take risks! 🌱`;
+            } else if (age >= 30 && age <= 39) {
+                ageMessage = `${nameInput}, thriving in your 30s! 🔥 Keep pushing forward!`;
+                funFact = `Did you know? People in their 30s are more likely to focus on career and relationships! 💼`;
+            } else {
+                ageMessage = `${nameInput}, you're full of wisdom and experiences! 🌟`;
+                funFact = `Did you know? People over 40 tend to be more patient and thoughtful! 🌿`;
+            }
+
+            document.getElementById('result').textContent = `You are ${age} years, ${monthAge} months, and ${dayAge} days old.`;
+            document.getElementById('message').textContent = ageMessage;
+            document.getElementById('funFact').textContent = funFact;
+        }
+    </script>
+
+</body>
+</html>
